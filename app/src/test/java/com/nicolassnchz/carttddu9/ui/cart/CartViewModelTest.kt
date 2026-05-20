@@ -73,7 +73,11 @@ class CartViewModelTest {
         viewModel.loadCart()
         advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value is CartUiState.Error)
+        val state = viewModel.uiState.value
+
+        assertTrue(state is CartUiState.Error)
+        state as CartUiState.Error
+        assertEquals("Sin conexión. Verificar red.", state.message)
     }
 
     @Test
@@ -90,5 +94,12 @@ class CartViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `calculateTotal returns zero when cart is empty`() {
+        val total = viewModel.calculateTotal(emptyList())
+
+        assertEquals(0.0, total, 0.001)
     }
 }
